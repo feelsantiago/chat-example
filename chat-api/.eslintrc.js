@@ -62,6 +62,12 @@ module.exports = {
                 ignoreStatic: true,
             },
         ],
+        'prettier/prettier': [
+            'error',
+            {
+                endOfLine: 'auto',
+            },
+        ],
         'import/prefer-default-export': 'off',
         'import/no-extraneous-dependencies': [
             'error',
