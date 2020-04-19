@@ -3,24 +3,40 @@
         <div class="card-content">
             <div class="content">
                 <h1 class="has-text-centered">Chat Example Project</h1>
-                <form>
+                <form [formGroup]="signinForm" (ngSubmit)="onFormSubimit()">
                     <div class="field">
                         <label class="label">Email</label>
                         <div class="control has-icons-left has-icons-right">
-                            <input class="input is-danger" type="email" placeholder="Email input" value="hello@" />
+                            <input
+                                class="input"
+                                [ngClass]="{ 'is-danger': email.invalid, 'is-success': !email.invalid }"
+                                type="email"
+                                placeholder="Email input"
+                                formControlName="email"
+                            />
                             <span class="icon is-small is-left">
                                 <i class="fas fa-envelope"></i>
                             </span>
-                            <span class="icon is-small is-right">
+                            <span
+                                *ngIf="email.invalid && (email.dirty || email.touched)"
+                                class="icon is-small is-right"
+                            >
                                 <i class="fas fa-exclamation-triangle"></i>
                             </span>
                         </div>
-                        <p class="help is-danger">This email is invalid</p>
+                        <p *ngIf="email.invalid && email.errors.email" class="help is-danger">This email is invalid!</p>
+                        <p *ngIf="email.invalid && email.errors.required" class="help is-danger">Email is required!</p>
                     </div>
                     <div class="field">
                         <label class="label">Password</label>
                         <div class="control has-icons-left has-icons-right">
-                            <input class="input" type="password" placeholder="password" />
+                            <input
+                                class="input"
+                                [ngClass]="{ 'is-danger': password.invalid, 'is-success': !password.invalid }"
+                                type="password"
+                                placeholder="password"
+                                formControlName="password"
+                            />
                             <span class="icon is-small is-left">
                                 <i class="fas fa-key"></i>
                             </span>
@@ -28,9 +44,12 @@
                                 <i class="fas fa-exclamation-triangle"></i>
                             </span>
                         </div>
+                        <p *ngIf="password.invalid && password.errors.required" class="help is-danger">
+                            Password is required!
+                        </p>
                     </div>
                     <div class="action">
-                        <button class="button is-success">Sign In</button>
+                        <button [disabled]="!signinForm.valid" class="button is-success">Sign In</button>
                     </div>
                     <div class="disclaimer has-text-centered">
                         <p>Don't have a account?</p>
