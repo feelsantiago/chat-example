@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+import { ChatSocket } from './chat.socket';
+
+@Injectable()
 export class ChatService {
-    constructor(private socket: Socket) {}
+    constructor(private socket: ChatSocket) {}
 
     public sendMessage(msg: string): void {
         this.socket.emit('message', msg);

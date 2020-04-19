@@ -7,6 +7,7 @@ const routes: Routes = [
         path: 'signin',
         component: SigninComponent,
     },
+    { path: 'chat', loadChildren: () => import('./chat/chat.module').then((m) => m.ChatModule) },
     {
         path: '',
         redirectTo: 'signin',

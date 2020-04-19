@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-signin',
@@ -17,14 +18,14 @@ export class SigninComponent implements OnInit {
         return this.signinForm.get('password');
     }
 
-    constructor(private readonly fb: FormBuilder) {}
+    constructor(private readonly fb: FormBuilder, private readonly router: Router) {}
 
     public ngOnInit(): void {
         this.signinForm = this.setupFrom();
     }
 
     public onFormSubimit(): void {
-        console.log(this.signinForm.value);
+        this.router.navigate(['/chat']);
     }
 
     private setupFrom(): FormGroup {
