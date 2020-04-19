@@ -1,0 +1,10 @@
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">{{ title }}</p>
+    </header>
+    <div class="card-content">
+        <div *ngFor="let user of users">
+            <app-user-card [name]="user.name" [avatar]="user.avatar" [subtitle]="user.subtitle"></app-user-card>
+        </div>
+    </div>
+</div>

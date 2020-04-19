@@ -1,1 +1,11 @@
-<p>chat-dashboard works!</p>
+<div class="columns">
+    <div class="column">
+        <app-chat-user-list [users]="users" [title]="'Users Online'"></app-chat-user-list>
+    </div>
+    <div class="column">
+        <app-chat-user-list [users]="chats" [title]="'Chats'"></app-chat-user-list>
+    </div>
+    <div class="column is-half">
+        <app-chat-panel></app-chat-panel>
+    </div>
+</div>

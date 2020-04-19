@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MockService } from '../../services/mock.service';
 import { ChatService } from '../chat.service';
+import { UserCard } from '../chat-types';
 
 @Component({
     selector: 'app-chat-dashboard',
@@ -7,7 +9,15 @@ import { ChatService } from '../chat.service';
     styleUrls: ['./chat-dashboard.component.scss'],
 })
 export class ChatDashboardComponent implements OnInit {
-    // constructor(private readonly chatService: ChatService) {}
+    public users: UserCard[];
 
-    public ngOnInit(): void {}
+    public chats: UserCard[];
+
+    // constructor(private readonly chatService: ChatService) {}
+    constructor(private readonly mockService: MockService) {}
+
+    public ngOnInit(): void {
+        this.users = this.mockService.users;
+        this.chats = this.mockService.chats;
+    }
 }
