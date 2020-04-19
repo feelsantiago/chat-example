@@ -1,0 +1,28 @@
+.signin-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    min-width: 500px;
+    max-width: 500px;
+}
+
+.action {
+    margin-top: 25px;
+
+    button {
+        width: 100%;
+    }
+}
+
+.disclaimer {
+    padding: 0;
+    margin-top: 25px;
+
+    p {
+        margin: 0;
+    }
+}
