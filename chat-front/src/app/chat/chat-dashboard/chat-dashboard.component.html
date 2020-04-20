@@ -6,7 +6,7 @@
         <app-chat-user-list [users]="chats" [title]="'Chats'"></app-chat-user-list>
     </div>
     <div class="column is-half">
-        <app-chat-panel [messages]="messages"></app-chat-panel>
+        <app-chat-panel [messages]="messages" [user]="'Filipe'"></app-chat-panel>
     </div>
     <div class="logout-column">
         <button class="button is-link" (click)="onLogout()">Logout</button>

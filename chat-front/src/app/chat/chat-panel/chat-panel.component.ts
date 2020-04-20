@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Message } from '../chat-types';
 
 @Component({
@@ -9,6 +9,9 @@ import { Message } from '../chat-types';
 export class ChatPanelComponent implements OnInit {
     @Input()
     public messages: Message[];
+
+    @Input()
+    public user: string;
 
     public newMessage = '';
 
