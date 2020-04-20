@@ -1,5 +1,6 @@
 import { throwError, Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import * as util from 'util';
 
 /* eslint-disable no-console */
 
@@ -11,6 +12,7 @@ export const handleRequestError = (error: HttpErrorResponse): Observable<never> 
         // The backend returned an unsuccessful response code.
         // The response body may contain clues as to what went wrong,
         console.error(`Backend returned code ${error.status}, body was: ${error.error}`);
+        console.log(util.inspect(error.error, true, 10, true));
     }
     // return an observable with a user-facing error message
     return throwError('Something bad happened; please try again later.');

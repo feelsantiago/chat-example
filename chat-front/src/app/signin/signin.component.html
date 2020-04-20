@@ -49,7 +49,7 @@
                         </p>
                     </div>
                     <div class="action">
-                        <button [disabled]="!signinForm.valid" class="button is-success">Sign In</button>
+                        <button [disabled]="!signinForm.valid || isLoading" class="button is-success">Sign In</button>
                     </div>
                     <div class="disclaimer has-text-centered">
                         <p>Don't have a account?</p>
