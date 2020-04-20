@@ -9,9 +9,10 @@ import { ChatDashboardComponent } from './chat-dashboard/chat-dashboard.componen
 import { ChatService } from './chat.service';
 import { ChatSocket } from './chat.socket';
 import { UserOnlineComponent } from './components/user-card/user-card.component';
+import { MessageComponent } from './components/message/message.component';
 
 @NgModule({
-    declarations: [ChatUserListComponent, ChatPanelComponent, ChatDashboardComponent, UserOnlineComponent],
+    declarations: [ChatUserListComponent, ChatPanelComponent, ChatDashboardComponent, UserOnlineComponent, MessageComponent],
     imports: [CommonModule, ChatRoutingModule, SocketIoModule],
     providers: [ChatSocket, ChatService],
 })

@@ -3,3 +3,8 @@ export interface UserCard {
     readonly avatar: string;
     readonly subtitle: string;
 }
+
+export interface Message {
+    readonly text: string;
+    readonly isDonor: boolean;
+}

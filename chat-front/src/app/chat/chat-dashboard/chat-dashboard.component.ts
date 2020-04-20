@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MockService } from '../../services/mock.service';
 import { ChatService } from '../chat.service';
-import { UserCard } from '../chat-types';
+import { UserCard, Message } from '../chat-types';
 
 @Component({
     selector: 'app-chat-dashboard',
@@ -13,11 +13,14 @@ export class ChatDashboardComponent implements OnInit {
 
     public chats: UserCard[];
 
+    public messages: Message[];
+
     // constructor(private readonly chatService: ChatService) {}
     constructor(private readonly mockService: MockService) {}
 
     public ngOnInit(): void {
         this.users = this.mockService.users;
         this.chats = this.mockService.chats;
+        this.messages = this.mockService.messages;
     }
 }

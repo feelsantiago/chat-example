@@ -2,7 +2,15 @@
     <header class="card-header">
         <p class="card-header-title">Filipe</p>
     </header>
-    <div class="card-content"></div>
+    <div class="card-content">
+        <div
+            class="message-container"
+            *ngFor="let message of messages"
+            [ngClass]="{ 'message-donor': message.isDonor }"
+        >
+            <app-message [text]="message.text" [isDonor]="message.isDonor"></app-message>
+        </div>
+    </div>
 </div>
 <div class="card input-message">
     <div class="field">

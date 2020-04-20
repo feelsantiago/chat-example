@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Message } from '../chat-types';
 
 @Component({
     selector: 'app-chat-panel',
@@ -6,5 +7,8 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./chat-panel.component.scss'],
 })
 export class ChatPanelComponent implements OnInit {
+    @Input()
+    public messages: Message[];
+
     public ngOnInit(): void {}
 }

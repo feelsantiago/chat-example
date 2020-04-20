@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserCard } from '../chat/chat-types';
+import { UserCard, Message } from '../chat/chat-types';
 
 @Injectable({ providedIn: 'root' })
 export class MockService {
@@ -24,6 +24,19 @@ export class MockService {
                 name: 'Filipe',
                 avatar: '',
                 subtitle: 'Last message...',
+            },
+        ];
+    }
+
+    public get messages(): Message[] {
+        return [
+            {
+                text: 'Mesage 1',
+                isDonor: false,
+            },
+            {
+                text: 'Message 2',
+                isDonor: true,
             },
         ];
     }

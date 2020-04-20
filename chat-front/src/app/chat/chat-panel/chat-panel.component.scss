@@ -26,3 +26,15 @@
         border-radius: 0;
     }
 }
+
+.message-container {
+    display: flex;
+
+    app-message {
+        flex: 0.8;
+    }
+}
+
+.message-donor {
+    justify-content: flex-end;
+}
