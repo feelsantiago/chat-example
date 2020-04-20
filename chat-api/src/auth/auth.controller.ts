@@ -8,7 +8,7 @@ import { UserLoginDto } from './dtos/user-login.dto';
 export class AuthController {
     constructor(private readonly repositoryService: RepositoryService, private readonly authService: AuthService) {}
 
-    @Post('sigin')
+    @Post('signin')
     @HttpCode(200)
     public async userSignIn(@Body() info: UserLoginDto): Promise<SingInResult> {
         const user = await this.repositoryService.users.findOne({ email: info.email }).select('+password');

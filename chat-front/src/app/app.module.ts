@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
@@ -8,7 +9,7 @@ import { SigninComponent } from './signin/signin.component';
 
 @NgModule({
     declarations: [AppComponent, SigninComponent],
-    imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
+    imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule],
     providers: [],
     bootstrap: [AppComponent],
 })
