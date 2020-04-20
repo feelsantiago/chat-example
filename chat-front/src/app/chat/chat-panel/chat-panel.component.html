@@ -2,7 +2,7 @@
     <header class="card-header">
         <p class="card-header-title">Filipe</p>
     </header>
-    <div class="card-content">
+    <div class="card-content" appScrollToBottom>
         <div
             class="message-container"
             *ngFor="let message of messages"
@@ -15,8 +15,8 @@
 <div class="card input-message">
     <div class="field">
         <div class="control">
-            <input class="input is-large" type="text" placeholder="..." />
+            <input class="input is-large" type="text" placeholder="..." [(ngModel)]="newMessage" />
         </div>
     </div>
-    <button class="button is-link">Enviar</button>
+    <button [disabled]="newMessage === ''" class="button is-link" (click)="onSendMessage()">Enviar</button>
 </div>
