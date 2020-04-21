@@ -15,17 +15,22 @@ export class SocketAuthGuard {
             data: SocketAuthenticationPayload,
             callback: (error: Error, result?: boolean) => void,
         ): Promise<void> => {
-            const user = await this.repositoryService.users.findById(data._id);
-            if (!user) {
-                return callback(new Error('User not found!'));
-            }
+            try {
+                const user = await this.repositoryService.users.findById(data._id);
+                if (!user) {
+                    return callback(new Error('User not found!'));
+                }
 
-            const payload = this.authService.verifyToken(data.token);
-            if (!payload) {
-                return callback(new Error('Invalid Token!'));
-            }
+                const payload = this.authService.verifyToken(data.token);
+                if (!payload) {
+                    return callback(new Error('Invalid Token!'));
+                }
 
-            return callback(null, true);
+                return callback(null, true);
+            } catch (error) {
+                console.log(error);
+                return callback(error);
+            }
         };
 
         return authentication;

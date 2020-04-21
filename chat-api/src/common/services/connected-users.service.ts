@@ -4,6 +4,10 @@ import { Injectable } from '@nestjs/common';
 export class ConnectedUsersService {
     private readonly users: Map<string, string>;
 
+    constructor() {
+        this.users = new Map();
+    }
+
     public createConnection(key: string): void {
         this.users.set(key, '');
     }

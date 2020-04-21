@@ -29,6 +29,14 @@ export class ChatService {
         return this.socket.fromEvent<boolean>('authenticated').pipe(switchMap(() => this.createRoomEvent(_id)));
     }
 
+    public onUserConnected(): Observable<string> {
+        return this.socket.fromEvent<string>('user_connected');
+    }
+
+    public onUserDisconnected(): Observable<string> {
+        return this.socket.fromEvent<string>('user_disconnected');
+    }
+
     private createRoomEvent(_id: string): Observable<boolean> {
         const observable$ = new Observable((subscriber: Subscriber<boolean>) => {
             this.socket.emit('create_room', { _id }, (result) => {
