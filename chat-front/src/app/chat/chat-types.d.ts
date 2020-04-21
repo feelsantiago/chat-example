@@ -8,3 +8,8 @@ export interface Message {
     readonly text: string;
     readonly isDonor: boolean;
 }
+
+export interface AuthenticationPayload {
+    readonly _id: string;
+    readonly token: string;
+}

@@ -35,7 +35,7 @@ export class AuthService {
     }
 
     public get token(): string | undefined {
-        return this.isLogged ? this.token : undefined;
+        return this._token;
     }
 
     public setUserAndToken(user: UserModel, token: string): void {

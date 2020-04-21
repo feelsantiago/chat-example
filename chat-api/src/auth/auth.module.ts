@@ -13,10 +13,7 @@ import { SocketAuthGuard } from './guards/socket-auth.guard';
         DatabaseModule,
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
-            secretOrPrivateKey: 'phormigg@@t0mic@',
-            signOptions: {
-                // expiresIn: 3600
-            },
+            secret: 'phormigg@@t0mic@',
         }),
     ],
     controllers: [AuthController],

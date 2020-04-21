@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { SubSink } from 'subsink';
 import { MockService } from '../../services/mock.service';
 import { ChatService } from '../chat.service';
 import { UserCard, Message } from '../chat-types';
@@ -10,7 +11,9 @@ import { AuthService } from '../../services/auth.service';
     templateUrl: './chat-dashboard.component.html',
     styleUrls: ['./chat-dashboard.component.scss'],
 })
-export class ChatDashboardComponent implements OnInit {
+export class ChatDashboardComponent implements OnInit, OnDestroy {
+    private readonly subscriptions: SubSink;
+
     public users: UserCard[];
 
     public chats: UserCard[];
@@ -23,16 +26,31 @@ export class ChatDashboardComponent implements OnInit {
         private readonly authService: AuthService,
         private readonly router: Router,
         private readonly chatService: ChatService,
-    ) {}
+    ) {
+        this.subscriptions = new SubSink();
+    }
 
     public ngOnInit(): void {
+        const { _id } = this.authService.user;
+        const { token } = this.authService;
+
+        this.chatService.authenticate({ _id, token });
+        this.subscriptions.sink = this.chatService
+            .onAuthenticationSuccessful(_id)
+            .subscribe((result) => console.log(`Create Room Status: ${result}`));
+
         this.users = this.mockService.users;
         this.chats = this.mockService.chats;
         this.messages = this.mockService.messages;
     }
 
+    public ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+    }
+
     public onLogout(): void {
         this.authService.clearSession();
+        this.chatService.disconnect();
         this.router.navigate(['/']);
     }
 }

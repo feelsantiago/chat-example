@@ -8,12 +8,13 @@ import {
     OnGatewayConnection,
     OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Server, Socket, Client } from 'socket.io';
 import * as socketAuth from 'socketio-auth';
 
 import { CreateRoomPayload, MessagePayload } from './chat-types';
 import { RepositoryService } from './database/repository.service';
 import { SocketAuthGuard } from './auth/guards/socket-auth.guard';
+import { ConnectedUsersService } from './common/services/connected-users.service';
 
 @WebSocketGateway()
 export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -23,14 +24,20 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     constructor(
         private readonly repositoryService: RepositoryService,
         private readonly socketAuthGuard: SocketAuthGuard,
+        private readonly connectedUsersService: ConnectedUsersService,
     ) {}
 
-    public handleDisconnect(client: any): void {
-        console.log('disconect');
+    public handleConnection(client: Client): void {
+        const { id } = client;
+        console.log(`New Socket Connection With Id: ${id}`);
+        this.connectedUsersService.createConnection(id);
     }
 
-    public handleConnection(client: any, ...args: any[]): void {
-        console.log('connected');
+    public handleDisconnect(client: Client): void {
+        const { id } = client;
+        console.log(`Client Disconnection With Id: ${id}`);
+        this.server.emit('user_disconnected', { _id: id });
+        this.connectedUsersService.closeConnection(id);
     }
 
     public afterInit(server: Server): void {
@@ -38,8 +45,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     }
 
     @SubscribeMessage('create_room')
-    public handleCreateRoom(@MessageBody() data: CreateRoomPayload, @ConnectedSocket() socket: Socket): void {
+    public handleCreateRoom(@MessageBody() data: CreateRoomPayload, @ConnectedSocket() socket: Socket): boolean {
         socket.join(data._id);
+        this.connectedUsersService.addUser(socket.client.id, data._id);
+        this.server.emit('user_connected', { _id: data._id });
+        return true;
     }
 
     @SubscribeMessage('send_message')
