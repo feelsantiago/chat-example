@@ -22,6 +22,7 @@ export class ChatDashboardComponent implements OnInit {
         private readonly mockService: MockService,
         private readonly authService: AuthService,
         private readonly router: Router,
+        private readonly chatService: ChatService,
     ) {}
 
     public ngOnInit(): void {

@@ -16,4 +16,8 @@ export class AuthService {
         const user = await this.repositoryService.users.findById(payload._id);
         return user ? user.toJSON() : null;
     }
+
+    public verifyToken(token: string): JwtPayload {
+        return this.jwtService.verify<JwtPayload>(token);
+    }
 }

@@ -1,3 +1,5 @@
+import { Socket } from 'socket.io';
+
 export interface CreateRoomPayload {
     readonly _id: string;
 }
