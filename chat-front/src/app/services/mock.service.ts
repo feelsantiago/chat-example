@@ -3,24 +3,10 @@ import { UserCard, Message } from '../chat/chat-types';
 
 @Injectable({ providedIn: 'root' })
 export class MockService {
-    public get users(): UserCard[] {
-        return [
-            {
-                name: 'Filipe',
-                avatar: '',
-                subtitle: 'Online',
-            },
-            {
-                name: 'Thiago',
-                avatar: '',
-                subtitle: 'Online',
-            },
-        ];
-    }
-
     public get chats(): UserCard[] {
         return [
             {
+                _id: '',
                 name: 'Filipe',
                 avatar: '',
                 subtitle: 'Last message...',

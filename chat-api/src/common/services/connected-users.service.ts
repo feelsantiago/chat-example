@@ -16,6 +16,10 @@ export class ConnectedUsersService {
         this.users.set(key, _id);
     }
 
+    public getUser(key: string): string {
+        return this.users.get(key);
+    }
+
     public closeConnection(key: string): void {
         this.users.delete(key);
     }

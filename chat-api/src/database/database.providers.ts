@@ -1,7 +1,7 @@
 import { Provider } from '@nestjs/common';
 import * as mongoose from 'mongoose';
 import { Connection } from 'mongoose';
-import { UserSchema, User } from './schemas/user.schema';
+import { UserSchema } from './schemas/user.schema';
 
 export const DatabaseConnectionToken = 'DbConnectionToken';
 export const UserModelToken = 'UserModel';
@@ -17,9 +17,6 @@ export const providers: Provider[] = [
                 useUnifiedTopology: true,
             });
 
-            /* eslint-disable no-console */
-            console.log('[Database - Connection successful]');
-            /* eslint-enable no-console */
             return connection;
         },
         inject: [],

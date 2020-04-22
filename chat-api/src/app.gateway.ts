@@ -35,8 +35,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
     public handleDisconnect(client: Client): void {
         const { id } = client;
+        const _id = this.connectedUsersService.getUser(id);
         console.log(`Client Disconnection With Id: ${id}`);
-        this.server.emit('user_disconnected', { _id: id });
+        this.server.emit('user_disconnected', { _id });
         this.connectedUsersService.closeConnection(id);
     }
 
