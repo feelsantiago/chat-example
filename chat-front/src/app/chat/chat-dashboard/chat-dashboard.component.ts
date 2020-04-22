@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { SubSink } from 'subsink';
-import { map, mergeMap, filter } from 'rxjs/operators';
+import { map, filter, concatMap } from 'rxjs/operators';
 
 import { UserModel } from '../../models/user.model';
 import { UserClientService } from '../../clients/user-client.service';
@@ -39,9 +39,8 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
         const { _id } = this.authService.user;
         const { token } = this.authService;
 
-        this.chatService.authenticate({ _id, token });
         this.subscriptions.sink = this.chatService
-            .onAuthenticationSuccessful(_id)
+            .authenticate({ _id, token })
             .subscribe((result) => console.log(`Create Room Status: ${result}`));
 
         this.subscriptions.sink = this.userClientService
@@ -54,8 +53,9 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
         this.subscriptions.sink = this.chatService
             .onUserConnected()
             .pipe(
+                /** Ignore our connection */
                 filter((data) => data._id !== _id),
-                mergeMap((data) => this.userClientService.getUserById(data._id)),
+                concatMap((data) => this.userClientService.getUserById(data._id)),
                 map((user) => this.mapUsersToCards([user]).pop()),
             )
             .subscribe((user) => this.users.push(user));

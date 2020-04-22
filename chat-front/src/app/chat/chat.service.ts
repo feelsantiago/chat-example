@@ -30,13 +30,10 @@ export class ChatService {
         return this.socket.fromEvent<string>('message');
     }
 
-    public authenticate(data: AuthenticationPayload): void {
+    public authenticate(data: AuthenticationPayload): Observable<boolean> {
         this.checkConnection();
         this.socket.emit('authentication', data);
-    }
-
-    public onAuthenticationSuccessful(_id: string): Observable<boolean> {
-        return this.socket.fromEvent<boolean>('authenticated').pipe(switchMap(() => this.createRoomEvent(_id)));
+        return this.socket.fromEvent<boolean>('authenticated').pipe(switchMap(() => this.createRoom(data._id)));
     }
 
     public onUserConnected(): Observable<ConnectionData> {
@@ -47,7 +44,7 @@ export class ChatService {
         return this.socket.fromEvent<ConnectionData>('user_disconnected');
     }
 
-    private createRoomEvent(_id: string): Observable<boolean> {
+    private createRoom(_id: string): Observable<boolean> {
         const observable$ = new Observable((subscriber: Subscriber<boolean>) => {
             this.socket.emit('create_room', { _id }, (result) => {
                 subscriber.next(result);
