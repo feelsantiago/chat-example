@@ -2,9 +2,11 @@ import { Provider } from '@nestjs/common';
 import * as mongoose from 'mongoose';
 import { Connection } from 'mongoose';
 import { UserSchema } from './schemas/user.schema';
+import { ChatSchema } from './schemas/chat.schema';
 
 export const DatabaseConnectionToken = 'DbConnectionToken';
 export const UserModelToken = 'UserModel';
+export const ChatModelToken = 'ChatModel';
 export const MockUserToken = 'MockUserToken';
 
 export const providers: Provider[] = [
@@ -24,6 +26,11 @@ export const providers: Provider[] = [
     {
         provide: UserModelToken,
         useFactory: (connection: Connection) => connection.model<UserSchema>('users', UserSchema),
+        inject: [DatabaseConnectionToken],
+    },
+    {
+        provide: ChatModelToken,
+        useFactory: (connection: Connection) => connection.model<ChatSchema>('chats', ChatSchema),
         inject: [DatabaseConnectionToken],
     },
     // {

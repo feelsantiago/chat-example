@@ -30,7 +30,7 @@ export const UserSchema = new Schema({
     },
 });
 
-UserSchema.pre<UserSchema>('save', function(callback) {
+UserSchema.pre<UserSchema>('save', function (callback) {
     /* eslint-disable @typescript-eslint/no-this-alias */
     const user = this;
 
