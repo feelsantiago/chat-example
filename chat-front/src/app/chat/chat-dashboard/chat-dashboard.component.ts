@@ -5,7 +5,6 @@ import { map, filter, concatMap } from 'rxjs/operators';
 
 import { UserModel } from '../../models/user.model';
 import { UserClientService } from '../../clients/user-client.service';
-import { MockService } from '../../services/mock.service';
 import { ChatService } from '../chat.service';
 import { UserCard, Message } from '../chat-types';
 import { AuthService } from '../../services/auth.service';
@@ -26,7 +25,6 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
 
     // constructor(private readonly chatService: ChatService) {}
     constructor(
-        private readonly mockService: MockService,
         private readonly authService: AuthService,
         private readonly chatService: ChatService,
         private readonly userClientService: UserClientService,
@@ -64,9 +62,6 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
             const index = this.users.findIndex((user) => user._id === data._id);
             this.users.splice(index, 1);
         });
-
-        this.chats = this.mockService.chats;
-        this.messages = this.mockService.messages;
     }
 
     public ngOnDestroy(): void {
