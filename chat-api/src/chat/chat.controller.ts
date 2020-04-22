@@ -13,7 +13,6 @@ export class ChatController {
 
     @Get()
     public async getChats(@User() user: UserInfo): Promise<ChatResponse[]> {
-        console.log(user);
         const chats = await this.repositoryService.chats.find({ users: user._id });
         return this.chatService.createChatResponse(chats, user._id);
     }

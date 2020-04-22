@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { SubSink } from 'subsink';
 import { map, filter, concatMap } from 'rxjs/operators';
 
+import { GetChatResponse } from '../../clients/client-types';
+import { ChatClientService } from '../../clients/chat-client.service';
 import { UserModel } from '../../models/user.model';
 import { UserClientService } from '../../clients/user-client.service';
 import { ChatService } from '../chat.service';
@@ -30,6 +32,7 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
         private readonly authService: AuthService,
         private readonly chatService: ChatService,
         private readonly userClientService: UserClientService,
+        private readonly chatClientService: ChatClientService,
         private readonly router: Router,
     ) {
         this.subscriptions = new SubSink();
@@ -45,6 +48,13 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
             .subscribe((result) => console.log(`Create Room Status: ${result}`));
 
         this.handleConnectedUsers(_id);
+
+        this.chatClientService
+            .getChats()
+            .pipe(map((chats) => this.mapChatToCards(chats)))
+            .subscribe((chats) => {
+                this.chats = chats;
+            });
     }
 
     public ngOnDestroy(): void {
@@ -104,5 +114,15 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
 
     private mapUsersToCards(users: UserModel[]): UserCard[] {
         return users.map((user) => ({ _id: user._id, name: user.name, avatar: '', subtitle: 'Online' }));
+    }
+
+    private mapChatToCards(chats: GetChatResponse[]): UserCardChat[] {
+        return chats.map((chat) => ({
+            _id: chat.user,
+            name: chat.user,
+            subtitle: chat.lastMessage,
+            avatar: '',
+            isTemp: false,
+        }));
     }
 }
