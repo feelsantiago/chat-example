@@ -9,3 +9,8 @@ export interface SignInResponse {
     readonly token: string;
     readonly user: UserModel;
 }
+
+export interface GetChatResponse {
+    readonly user: string;
+    readonly lastMessage: string;
+}
