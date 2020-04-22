@@ -1,8 +1,8 @@
 import { createParamDecorator } from '@nestjs/common';
-import { User } from '../../database/schemas/user.schema';
+import { JwtPayload } from '../auth-types';
 
-export const UserInfo = createParamDecorator(
-    (data, req): User => {
+export const User = createParamDecorator(
+    (data, req): JwtPayload => {
         return req.user;
     },
 );

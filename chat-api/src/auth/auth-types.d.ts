@@ -6,6 +6,8 @@ export interface JwtPayload {
     email: string;
 }
 
+export type UserInfo = JwtPayload;
+
 export interface SingInResult {
     user: JwtPayload;
     token: string;
