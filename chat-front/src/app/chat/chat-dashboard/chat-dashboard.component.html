@@ -3,7 +3,7 @@
         <app-chat-user-list
             [users]="users"
             [title]="'Users Online'"
-            (cardClick)="onUserConnectedClick()"
+            (cardClick)="onUserConnectedClick($event)"
         ></app-chat-user-list>
     </div>
     <div class="column">

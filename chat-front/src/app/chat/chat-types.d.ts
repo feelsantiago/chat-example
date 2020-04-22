@@ -5,6 +5,8 @@ export interface UserCard {
     readonly subtitle: string;
 }
 
+export type UserCardChat = UserCard & { isTemp: boolean };
+
 export interface Message {
     readonly text: string;
     readonly isDonor: boolean;

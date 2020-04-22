@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { SubSink } from 'subsink';
 import { map, filter, concatMap } from 'rxjs/operators';
 
+import { from } from 'rxjs';
 import { UserModel } from '../../models/user.model';
 import { UserClientService } from '../../clients/user-client.service';
 import { ChatService } from '../chat.service';
-import { UserCard, Message } from '../chat-types';
+import { UserCard, Message, UserCardChat } from '../chat-types';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -17,9 +18,11 @@ import { AuthService } from '../../services/auth.service';
 export class ChatDashboardComponent implements OnInit, OnDestroy {
     private readonly subscriptions: SubSink;
 
+    private tempChatIndex: number;
+
     public users: UserCard[];
 
-    public chats: UserCard[];
+    public chats: UserCardChat[];
 
     public messages: Message[];
 
@@ -31,6 +34,7 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
         private readonly router: Router,
     ) {
         this.subscriptions = new SubSink();
+        this.chats = [];
     }
 
     public ngOnInit(): void {
@@ -48,14 +52,30 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
-    public onUserConnectedClick(): void {
-        console.log('user connected click');
+    public onUserConnectedClick(user: UserCard): void {
+        const find = this.chats.find((chat) => chat._id === user._id);
+        if (find) {
+            // selected chat
+        } else {
+            const tempChat = this.updateTempChat(user);
+
+            if (this.tempChatIndex >= 0) {
+                this.chats.splice(this.tempChatIndex, 1);
+            }
+
+            this.chats = [...this.chats, tempChat];
+            this.tempChatIndex = this.chats.length - 1;
+        }
     }
 
     public onLogout(): void {
         this.authService.clearSession();
         this.chatService.disconnect();
         this.router.navigate(['/']);
+    }
+
+    private updateTempChat(user: UserCard): UserCardChat {
+        return { ...user, subtitle: '', isTemp: true };
     }
 
     private handleConnectedUsers(_id: string): void {

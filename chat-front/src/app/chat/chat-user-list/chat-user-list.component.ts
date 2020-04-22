@@ -16,7 +16,7 @@ export class ChatUserListComponent {
     @Output()
     public cardClick = new EventEmitter();
 
-    public onCardClick(): void {
-        this.cardClick.emit();
+    public onCardClick(user: UserCard): void {
+        this.cardClick.emit(user);
     }
 }
