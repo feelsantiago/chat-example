@@ -7,10 +7,19 @@ import { AuthenticationPayload, ConnectionData } from './chat-types';
 
 @Injectable()
 export class ChatService {
-    constructor(private socket: ChatSocket) {}
+    /**
+     * The connection happens once when the module is loaded, after a manual disconnection
+     * the service will not connect again, we need to manually do this
+     */
+    private isDisconnected: boolean;
+
+    constructor(private socket: ChatSocket) {
+        this.isDisconnected = false;
+    }
 
     public disconnect(): void {
         this.socket.disconnect();
+        this.isDisconnected = true;
     }
 
     public sendMessage(msg: string): void {
@@ -22,6 +31,7 @@ export class ChatService {
     }
 
     public authenticate(data: AuthenticationPayload): void {
+        this.checkConnection();
         this.socket.emit('authentication', data);
     }
 
@@ -46,5 +56,11 @@ export class ChatService {
         });
 
         return observable$;
+    }
+
+    private checkConnection(): void {
+        if (this.isDisconnected) {
+            this.socket.connect();
+        }
     }
 }
