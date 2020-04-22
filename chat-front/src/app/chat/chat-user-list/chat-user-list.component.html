@@ -8,6 +8,7 @@
                 [name]="user.name"
                 [avatar]="user.avatar"
                 [subtitle]="user.subtitle"
+                [selected]="user._id === selectedIdCard"
                 (click)="onCardClick(user)"
             ></app-user-card>
         </div>

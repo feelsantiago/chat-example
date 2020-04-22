@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { SubSink } from 'subsink';
 import { map, filter, concatMap } from 'rxjs/operators';
 
-import { from } from 'rxjs';
 import { UserModel } from '../../models/user.model';
 import { UserClientService } from '../../clients/user-client.service';
 import { ChatService } from '../chat.service';
@@ -55,7 +54,7 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
     public onUserConnectedClick(user: UserCard): void {
         const find = this.chats.find((chat) => chat._id === user._id);
         if (find) {
-            // selected chat
+            this.chatService.setSelectedChat(user._id);
         } else {
             const tempChat = this.updateTempChat(user);
 
@@ -65,6 +64,7 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
 
             this.chats = [...this.chats, tempChat];
             this.tempChatIndex = this.chats.length - 1;
+            this.chatService.setSelectedChat(user._id);
         }
     }
 

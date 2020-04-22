@@ -14,4 +14,7 @@ export class UserOnlineComponent {
 
     @Input()
     public subtitle: string;
+
+    @Input()
+    public selected = false;
 }

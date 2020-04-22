@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subject } from 'rxjs';
 
 import { switchMap } from 'rxjs/operators';
 import { ChatSocket } from './chat.socket';
@@ -13,8 +13,19 @@ export class ChatService {
      */
     private isDisconnected: boolean;
 
+    private selectedChatSubject: Subject<string>;
+
+    public get selectedChat$(): Observable<string> {
+        return this.selectedChatSubject.asObservable();
+    }
+
     constructor(private socket: ChatSocket) {
         this.isDisconnected = false;
+        this.selectedChatSubject = new Subject();
+    }
+
+    public setSelectedChat(_id: string): void {
+        this.selectedChatSubject.next(_id);
     }
 
     public disconnect(): void {
