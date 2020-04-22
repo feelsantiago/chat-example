@@ -12,14 +12,14 @@ export class UserController {
         private readonly connectedUsersService: ConnectedUsersService,
     ) {}
 
-    @Get(':_id')
-    public async getUser(@Param('_id') _id: string): Promise<User> {
-        return this.repositoryService.users.findById(_id);
-    }
-
     @Get('online')
     public async getConnectedUsers(): Promise<User[]> {
         const _ids = this.connectedUsersService.getConnectedUsers();
         return this.repositoryService.users.find({ _id: { $in: _ids } });
+    }
+
+    @Get(':_id')
+    public async getUser(@Param('_id') _id: string): Promise<User> {
+        return this.repositoryService.users.findById(_id);
     }
 }
