@@ -3,7 +3,7 @@ import { Observable, Subscriber } from 'rxjs';
 
 import { switchMap } from 'rxjs/operators';
 import { ChatSocket } from './chat.socket';
-import { AuthenticationPayload } from './chat-types';
+import { AuthenticationPayload, ConnectionData } from './chat-types';
 
 @Injectable()
 export class ChatService {
@@ -29,12 +29,12 @@ export class ChatService {
         return this.socket.fromEvent<boolean>('authenticated').pipe(switchMap(() => this.createRoomEvent(_id)));
     }
 
-    public onUserConnected(): Observable<string> {
-        return this.socket.fromEvent<string>('user_connected');
+    public onUserConnected(): Observable<ConnectionData> {
+        return this.socket.fromEvent<ConnectionData>('user_connected');
     }
 
-    public onUserDisconnected(): Observable<string> {
-        return this.socket.fromEvent<string>('user_disconnected');
+    public onUserDisconnected(): Observable<ConnectionData> {
+        return this.socket.fromEvent<ConnectionData>('user_disconnected');
     }
 
     private createRoomEvent(_id: string): Observable<boolean> {

@@ -22,7 +22,7 @@ export class ConnectedUsersService {
 
     public getConnectedUsers(): string[] {
         const values: string[] = [];
-        this.users.forEach((value) => values.push(value));
+        this.users.forEach((value) => (value !== '' ? values.push(value) : null));
         return values;
     }
 }

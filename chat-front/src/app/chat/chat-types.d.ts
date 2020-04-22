@@ -1,4 +1,5 @@
 export interface UserCard {
+    readonly _id: string;
     readonly name: string;
     readonly avatar: string;
     readonly subtitle: string;
@@ -12,4 +13,8 @@ export interface Message {
 export interface AuthenticationPayload {
     readonly _id: string;
     readonly token: string;
+}
+
+export interface ConnectionData {
+    _id: string;
 }

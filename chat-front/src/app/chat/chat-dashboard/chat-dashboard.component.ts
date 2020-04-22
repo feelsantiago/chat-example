@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { SubSink } from 'subsink';
-import { map } from 'rxjs/operators';
+import { map, mergeMap, filter } from 'rxjs/operators';
 
 import { UserModel } from '../../models/user.model';
 import { UserClientService } from '../../clients/user-client.service';
@@ -51,6 +51,20 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
                 this.users = users;
             });
 
+        this.subscriptions.sink = this.chatService
+            .onUserConnected()
+            .pipe(
+                filter((data) => data._id !== _id),
+                mergeMap((data) => this.userClientService.getUserById(data._id)),
+                map((user) => this.mapUsersToCards([user]).pop()),
+            )
+            .subscribe((user) => this.users.push(user));
+
+        this.subscriptions.sink = this.chatService.onUserDisconnected().subscribe((data) => {
+            const index = this.users.findIndex((user) => user._id === data._id);
+            this.users.splice(index, 1);
+        });
+
         this.chats = this.mockService.chats;
         this.messages = this.mockService.messages;
     }
@@ -66,6 +80,6 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
     }
 
     private mapUsersToCards(users: UserModel[]): UserCard[] {
-        return users.map((user) => ({ name: user.name, avatar: '', subtitle: 'Online' }));
+        return users.map((user) => ({ _id: user._id, name: user.name, avatar: '', subtitle: 'Online' }));
     }
 }
