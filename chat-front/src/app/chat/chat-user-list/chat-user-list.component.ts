@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { UserCard } from '../chat-types';
 
 @Component({
@@ -12,4 +12,11 @@ export class ChatUserListComponent {
 
     @Input()
     public users: UserCard[];
+
+    @Output()
+    public cardClick = new EventEmitter();
+
+    public onCardClick(): void {
+        this.cardClick.emit();
+    }
 }

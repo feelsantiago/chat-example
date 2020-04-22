@@ -1,6 +1,10 @@
 <div class="columns">
     <div class="column">
-        <app-chat-user-list [users]="users" [title]="'Users Online'"></app-chat-user-list>
+        <app-chat-user-list
+            [users]="users"
+            [title]="'Users Online'"
+            (cardClick)="onUserConnectedClick()"
+        ></app-chat-user-list>
     </div>
     <div class="column">
         <app-chat-user-list [users]="chats" [title]="'Chats'"></app-chat-user-list>

@@ -41,6 +41,24 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
             .authenticate({ _id, token })
             .subscribe((result) => console.log(`Create Room Status: ${result}`));
 
+        this.handleConnectedUsers(_id);
+    }
+
+    public ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+    }
+
+    public onUserConnectedClick(): void {
+        console.log('user connected click');
+    }
+
+    public onLogout(): void {
+        this.authService.clearSession();
+        this.chatService.disconnect();
+        this.router.navigate(['/']);
+    }
+
+    private handleConnectedUsers(_id: string): void {
         this.subscriptions.sink = this.userClientService
             .getConnectedUsers()
             .pipe(map((users) => this.mapUsersToCards(users)))
@@ -62,16 +80,6 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
             const index = this.users.findIndex((user) => user._id === data._id);
             this.users.splice(index, 1);
         });
-    }
-
-    public ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
-
-    public onLogout(): void {
-        this.authService.clearSession();
-        this.chatService.disconnect();
-        this.router.navigate(['/']);
     }
 
     private mapUsersToCards(users: UserModel[]): UserCard[] {
