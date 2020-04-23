@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { SubSink } from 'subsink';
-import { map, filter, concatMap } from 'rxjs/operators';
+import { map, filter, concatMap, mergeMap, scan } from 'rxjs/operators';
 
+import { from } from 'rxjs';
 import { GetChatResponse } from '../../clients/client-types';
 import { ChatClientService } from '../../clients/chat-client.service';
 import { UserModel } from '../../models/user.model';
@@ -48,20 +49,14 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
             .subscribe((result) => console.log(`Create Room Status: ${result}`));
 
         this.handleConnectedUsers(_id);
-
-        this.chatClientService
-            .getChats()
-            .pipe(map((chats) => this.mapChatToCards(chats)))
-            .subscribe((chats) => {
-                this.chats = chats;
-            });
+        this.handleChats();
     }
 
     public ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
     }
 
-    public onUserConnectedClick(user: UserCard): void {
+    public onUserConnectedClick(user: UserCardChat): void {
         const find = this.chats.find((chat) => chat._id === user._id);
         if (find) {
             this.chatService.setSelectedChat(user._id);
@@ -84,7 +79,7 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
     }
 
-    private updateTempChat(user: UserCard): UserCardChat {
+    private updateTempChat(user: UserCardChat): UserCardChat {
         return { ...user, subtitle: '', isTemp: true };
     }
 
@@ -112,6 +107,22 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
         });
     }
 
+    private handleChats(): void {
+        this.subscriptions.sink = this.chatClientService
+            .getChats()
+            .pipe(
+                map((chats) => this.mapChatToCards(chats)),
+                mergeMap((chats) => from(chats)),
+                concatMap((chat) =>
+                    this.userClientService.getUserById(chat._id).pipe(map((user) => ({ ...chat, name: user.name }))),
+                ),
+                scan((acc, next) => [...acc, next], []),
+            )
+            .subscribe((chats) => {
+                this.chats = chats;
+            });
+    }
+
     private mapUsersToCards(users: UserModel[]): UserCard[] {
         return users.map((user) => ({ _id: user._id, name: user.name, avatar: '', subtitle: 'Online' }));
     }
@@ -119,6 +130,7 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
     private mapChatToCards(chats: GetChatResponse[]): UserCardChat[] {
         return chats.map((chat) => ({
             _id: chat.user,
+            chat: chat._id,
             name: chat.user,
             subtitle: chat.lastMessage,
             avatar: '',

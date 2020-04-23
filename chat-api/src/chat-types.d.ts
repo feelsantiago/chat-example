@@ -1,11 +1,16 @@
-import { Socket } from 'socket.io';
-
 export interface CreateRoomPayload {
     readonly _id: string;
 }
 
 export interface MessagePayload {
-    readonly _id: string;
-    readonly message: string;
+    readonly sender: string;
     readonly receiver: string;
+    readonly chat: string;
+    readonly message: string;
+}
+
+export interface NewMessagePayload {
+    readonly chat: string;
+    readonly message: string;
+    readonly sender: string;
 }

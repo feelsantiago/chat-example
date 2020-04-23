@@ -5,12 +5,22 @@ export interface UserCard {
     readonly subtitle: string;
 }
 
-export type UserCardChat = UserCard & { isTemp: boolean };
+export type UserCardChat = UserCard & { chat: string; isTemp: boolean };
 
-export interface Message {
-    readonly text: string;
-    readonly isDonor: boolean;
+export interface MessagePayload {
+    readonly sender: string;
+    readonly receiver: string;
+    readonly chat: string;
+    readonly message: string;
 }
+
+export interface NewMessagePayload {
+    readonly chat: string;
+    readonly message: string;
+    readonly sender: string;
+}
+
+export type Message = NewMessagePayload & { isDonor: boolean };
 
 export interface AuthenticationPayload {
     readonly _id: string;

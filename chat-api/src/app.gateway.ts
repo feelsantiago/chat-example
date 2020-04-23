@@ -11,10 +11,11 @@ import {
 import { Server, Socket, Client } from 'socket.io';
 import * as socketAuth from 'socketio-auth';
 
-import { CreateRoomPayload, MessagePayload } from './chat-types';
+import { CreateRoomPayload, MessagePayload, NewMessagePayload } from './chat-types';
 import { RepositoryService } from './database/repository.service';
 import { SocketAuthGuard } from './auth/guards/socket-auth.guard';
 import { ConnectedUsersService } from './common/services/connected-users.service';
+import { Chat, Message, ChatSchema } from './database/schemas/chat.schema';
 
 @WebSocketGateway()
 export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -54,7 +55,42 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     }
 
     @SubscribeMessage('send_message')
-    public handleSendMessage(@MessageBody() data: MessagePayload): void {
-        this.server.to(data.receiver).emit('new_message', data.message);
+    public async handleSendMessage(@MessageBody() data: MessagePayload): Promise<void> {
+        const chat = await this.createOrUpdateChat(data);
+        const { _id } = chat;
+        const { message, sender } = data;
+        const response: NewMessagePayload = { chat: _id, message, sender };
+        this.server.to(data.receiver).emit('new_message', response);
+    }
+
+    private async createOrUpdateChat(data: MessagePayload): Promise<ChatSchema> {
+        return data.chat === 'temp' ? this.createNewChat(data) : this.updateChat(data);
+    }
+
+    private async createNewChat(data: MessagePayload): Promise<ChatSchema> {
+        const chat: Chat = {
+            users: [data.sender, data.receiver],
+            messages: [
+                {
+                    text: data.message,
+                    user: data.sender,
+                },
+            ],
+        };
+
+        return this.repositoryService.chats.create(chat);
+    }
+
+    private async updateChat(data: MessagePayload): Promise<ChatSchema> {
+        const message: Message = {
+            text: data.message,
+            user: data.sender,
+        };
+
+        return this.repositoryService.chats.findByIdAndUpdate(
+            data.chat,
+            { $push: { messages: message } },
+            { new: true },
+        );
     }
 }

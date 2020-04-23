@@ -11,6 +11,7 @@ export interface SignInResponse {
 }
 
 export interface GetChatResponse {
+    readonly _id: string;
     readonly user: string;
     readonly lastMessage: string;
 }
