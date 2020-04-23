@@ -59,7 +59,7 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
     public onUserConnectedClick(user: UserCardChat): void {
         const find = this.chats.find((chat) => chat._id === user._id);
         if (find) {
-            this.chatService.setSelectedChat(user._id);
+            this.chatService.setSelectedUser(user._id);
         } else {
             const tempChat = this.updateTempChat(user);
             this.messages = [];
@@ -70,7 +70,7 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
 
             this.chats = [...this.chats, tempChat];
             this.tempChatIndex = this.chats.length - 1;
-            this.chatService.setSelectedChat(user._id);
+            this.chatService.setSelectedUser(user._id);
         }
     }
 

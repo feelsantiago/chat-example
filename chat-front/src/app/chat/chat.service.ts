@@ -13,19 +13,19 @@ export class ChatService {
      */
     private isDisconnected: boolean;
 
-    private selectedChatSubject: Subject<string>;
+    private selectedUser: Subject<string>;
 
-    public get selectedChat$(): Observable<string> {
-        return this.selectedChatSubject.asObservable();
+    public get selectedUser$(): Observable<string> {
+        return this.selectedUser.asObservable();
     }
 
     constructor(private socket: ChatSocket) {
         this.isDisconnected = false;
-        this.selectedChatSubject = new Subject();
+        this.selectedUser = new Subject();
     }
 
-    public setSelectedChat(_id: string): void {
-        this.selectedChatSubject.next(_id);
+    public setSelectedUser(_id: string): void {
+        this.selectedUser.next(_id);
     }
 
     public disconnect(): void {

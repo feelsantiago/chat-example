@@ -22,7 +22,7 @@ export class ChatUserListComponent implements OnInit {
     constructor(private readonly chatService: ChatService) {}
 
     public ngOnInit(): void {
-        this.chatService.selectedChat$.subscribe((_id) => {
+        this.chatService.selectedUser$.subscribe((_id) => {
             this.selectedIdCard = _id;
         });
     }
