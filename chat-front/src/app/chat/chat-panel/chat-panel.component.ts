@@ -17,8 +17,5 @@ export class ChatPanelComponent implements OnInit {
 
     public ngOnInit(): void {}
 
-    public onSendMessage(): void {
-        this.messages.push({ text: this.newMessage, isDonor: true });
-        this.newMessage = '';
-    }
+    public onSendMessage(): void {}
 }

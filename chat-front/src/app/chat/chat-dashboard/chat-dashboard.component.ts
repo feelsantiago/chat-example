@@ -4,7 +4,7 @@ import { SubSink } from 'subsink';
 import { map, filter, concatMap, mergeMap, scan } from 'rxjs/operators';
 
 import { from } from 'rxjs';
-import { GetChatResponse } from '../../clients/client-types';
+import { GetChatResponse, MessagesResponse } from '../../clients/client-types';
 import { ChatClientService } from '../../clients/chat-client.service';
 import { UserModel } from '../../models/user.model';
 import { UserClientService } from '../../clients/user-client.service';
@@ -62,6 +62,7 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
             this.chatService.setSelectedChat(user._id);
         } else {
             const tempChat = this.updateTempChat(user);
+            this.messages = [];
 
             if (this.tempChatIndex >= 0) {
                 this.chats.splice(this.tempChatIndex, 1);
@@ -70,6 +71,19 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
             this.chats = [...this.chats, tempChat];
             this.tempChatIndex = this.chats.length - 1;
             this.chatService.setSelectedChat(user._id);
+        }
+    }
+
+    public onChatClick(card: UserCardChat): void {
+        const { user } = this.authService;
+
+        if (!card.isTemp) {
+            this.subscriptions.sink = this.chatClientService
+                .getMessages(card.chat)
+                .pipe(map((messages) => this.mapMessages(messages, card.chat, user._id)))
+                .subscribe((messages) => {
+                    this.messages = messages;
+                });
         }
     }
 
@@ -135,6 +149,15 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
             subtitle: chat.lastMessage,
             avatar: '',
             isTemp: false,
+        }));
+    }
+
+    private mapMessages(messages: MessagesResponse[], chat: string, userId: string): Message[] {
+        return messages.map((message) => ({
+            chat,
+            message: message.text,
+            sender: message.user,
+            isDonor: userId === message.user,
         }));
     }
 }

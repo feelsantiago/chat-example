@@ -7,7 +7,7 @@
         ></app-chat-user-list>
     </div>
     <div class="column">
-        <app-chat-user-list [users]="chats" [title]="'Chats'"></app-chat-user-list>
+        <app-chat-user-list [users]="chats" [title]="'Chats'" (cardClick)="onChatClick($event)"></app-chat-user-list>
     </div>
     <div class="column is-half">
         <app-chat-panel [messages]="messages" [user]="'Filipe'"></app-chat-panel>

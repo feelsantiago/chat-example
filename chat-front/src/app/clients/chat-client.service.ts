@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ConfigService } from '../services/config.service';
-import { GetChatResponse } from './client-types';
+import { GetChatResponse, MessagesResponse } from './client-types';
 import { getHeaders } from '../utils/request-helpers';
 import { AuthService } from '../services/auth.service';
 
@@ -20,5 +20,11 @@ export class ChatClientService {
         const { token } = this.authService;
         const headers = getHeaders(token);
         return this.http.get<GetChatResponse[]>(`${this.configService.apiUrl}/${this.baseUrl}`, { headers });
+    }
+
+    public getMessages(_id: string): Observable<MessagesResponse[]> {
+        const { token } = this.authService;
+        const headers = getHeaders(token);
+        return this.http.get<MessagesResponse[]>(`${this.configService.apiUrl}/${this.baseUrl}/${_id}`, { headers });
     }
 }

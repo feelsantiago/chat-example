@@ -15,3 +15,8 @@ export interface GetChatResponse {
     readonly user: string;
     readonly lastMessage: string;
 }
+
+export interface MessagesResponse {
+    readonly text: string;
+    readonly user: string;
+}
