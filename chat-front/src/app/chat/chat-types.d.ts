@@ -30,3 +30,8 @@ export interface AuthenticationPayload {
 export interface ConnectionData {
     _id: string;
 }
+
+export interface SelectedUser {
+    _id: string;
+    name: string;
+}

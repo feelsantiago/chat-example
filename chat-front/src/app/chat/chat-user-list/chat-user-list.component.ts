@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { SubSink } from 'subsink';
 import { UserCard } from '../chat-types';
 import { ChatService } from '../chat.service';
 
@@ -7,7 +8,9 @@ import { ChatService } from '../chat.service';
     templateUrl: './chat-user-list.component.html',
     styleUrls: ['./chat-user-list.component.scss'],
 })
-export class ChatUserListComponent implements OnInit {
+export class ChatUserListComponent implements OnInit, OnDestroy {
+    private subscriptions: SubSink;
+
     @Input()
     public title: string;
 
@@ -19,12 +22,18 @@ export class ChatUserListComponent implements OnInit {
 
     public selectedIdCard: string;
 
-    constructor(private readonly chatService: ChatService) {}
+    constructor(private readonly chatService: ChatService) {
+        this.subscriptions = new SubSink();
+    }
 
     public ngOnInit(): void {
         this.chatService.selectedUser$.subscribe((_id) => {
             this.selectedIdCard = _id;
         });
+    }
+
+    public ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 
     public onCardClick(user: UserCard): void {
