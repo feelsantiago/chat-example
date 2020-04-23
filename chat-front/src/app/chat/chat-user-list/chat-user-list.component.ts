@@ -27,8 +27,8 @@ export class ChatUserListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.chatService.selectedUser$.subscribe((_id) => {
-            this.selectedIdCard = _id;
+        this.chatService.selectedUser$.subscribe((user) => {
+            this.selectedIdCard = user._id;
         });
     }
 
