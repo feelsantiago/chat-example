@@ -28,6 +28,8 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
 
     public messages: Message[];
 
+    public selectedChat: string;
+
     // constructor(private readonly chatService: ChatService) {}
     constructor(
         private readonly authService: AuthService,
@@ -70,6 +72,8 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
 
             this.chats = [...this.chats, tempChat];
             this.tempChatIndex = this.chats.length - 1;
+            this.selectedChat = 'temp';
+            this.chatService.setSelectedChat('temp');
             this.chatService.setSelectedUser({ _id: user._id, name: user.name });
         }
     }
@@ -83,7 +87,9 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
                 .pipe(map((messages) => this.mapMessages(messages, card.chat, user._id)))
                 .subscribe((messages) => {
                     this.messages = messages;
+                    this.selectedChat = card.chat;
                     this.chatService.setSelectedChat(card.chat);
+                    this.chatService.setSelectedUser({ _id: card._id, name: card.name });
                 });
         }
     }
@@ -136,6 +142,34 @@ export class ChatDashboardComponent implements OnInit, OnDestroy {
             .subscribe((chats) => {
                 this.chats = chats;
             });
+
+        this.subscriptions.sink = this.chatService.onNewChatCreated().subscribe((chat) => {
+            const temp = this.chats[this.chats.length - 1];
+            temp.isTemp = false;
+            temp.chat = chat._id;
+            this.tempChatIndex = undefined;
+            this.selectedChat = chat._id;
+            this.chatService.setSelectedChat(chat._id);
+        });
+
+        this.subscriptions.sink = this.chatService.onNewMessage().subscribe((payload) => {
+            const { chat, message, sender } = payload;
+            const find = this.findOrCreateChat(chat, sender, message);
+
+            if (find.chat === this.selectedChat) this.messages.push({ chat, message, sender, isDonor: false });
+        });
+    }
+
+    private findOrCreateChat(_id: string, sender: string, message: string): UserCardChat {
+        let chat = this.chats.find((card) => card.chat === _id);
+
+        if (!chat) {
+            const { name } = this.users.find((user) => user._id === sender);
+            chat = { _id: sender, chat: _id, avatar: '', subtitle: message, name, isTemp: false };
+            this.chats.push(chat);
+        }
+
+        return chat;
     }
 
     private mapUsersToCards(users: UserModel[]): UserCard[] {

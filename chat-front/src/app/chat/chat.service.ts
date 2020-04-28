@@ -3,7 +3,14 @@ import { Observable, Subscriber, Subject } from 'rxjs';
 
 import { switchMap } from 'rxjs/operators';
 import { ChatSocket } from './chat.socket';
-import { AuthenticationPayload, ConnectionData, NewMessagePayload, MessagePayload, SelectedUser } from './chat-types';
+import {
+    AuthenticationPayload,
+    ConnectionData,
+    NewMessagePayload,
+    MessagePayload,
+    SelectedUser,
+    NewChat,
+} from './chat-types';
 
 @Injectable()
 export class ChatService {
@@ -28,6 +35,7 @@ export class ChatService {
     constructor(private socket: ChatSocket) {
         this.isDisconnected = false;
         this.selectedUser = new Subject();
+        this.selectedChat = new Subject();
     }
 
     public setSelectedUser(user: SelectedUser): void {
@@ -47,14 +55,14 @@ export class ChatService {
         this.socket.emit('send_message', payload);
     }
 
-    public getMessage(): Observable<NewMessagePayload> {
-        return this.socket.fromEvent<NewMessagePayload>('new_message');
-    }
-
     public authenticate(data: AuthenticationPayload): Observable<boolean> {
         this.checkConnection();
         this.socket.emit('authentication', data);
         return this.socket.fromEvent<boolean>('authenticated').pipe(switchMap(() => this.createRoom(data._id)));
+    }
+
+    public onNewMessage(): Observable<NewMessagePayload> {
+        return this.socket.fromEvent<NewMessagePayload>('new_message');
     }
 
     public onUserConnected(): Observable<ConnectionData> {
@@ -63,6 +71,10 @@ export class ChatService {
 
     public onUserDisconnected(): Observable<ConnectionData> {
         return this.socket.fromEvent<ConnectionData>('user_disconnected');
+    }
+
+    public onNewChatCreated(): Observable<NewChat> {
+        return this.socket.fromEvent<NewChat>('new_chat_created');
     }
 
     private createRoom(_id: string): Observable<boolean> {

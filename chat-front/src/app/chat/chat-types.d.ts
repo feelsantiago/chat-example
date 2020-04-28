@@ -35,3 +35,7 @@ export interface SelectedUser {
     _id: string;
     name: string;
 }
+
+export interface NewChat {
+    _id: string;
+}

@@ -23,7 +23,9 @@ export class ChatPanelComponent implements OnInit, OnDestroy {
 
     public newMessage = '';
 
-    constructor(private readonly chatService: ChatService, private readonly authService: AuthService) {}
+    constructor(private readonly chatService: ChatService, private readonly authService: AuthService) {
+        this.subscriptions = new SubSink();
+    }
 
     public ngOnInit(): void {
         const { user } = this.authService;

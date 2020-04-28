@@ -61,6 +61,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         const { message, sender } = data;
         const response: NewMessagePayload = { chat: _id, message, sender };
         this.server.to(data.receiver).emit('new_message', response);
+        console.log(data);
+        if (data.chat === 'temp') this.server.to(data.sender).emit('new_chat_created', { _id });
     }
 
     private async createOrUpdateChat(data: MessagePayload): Promise<ChatSchema> {

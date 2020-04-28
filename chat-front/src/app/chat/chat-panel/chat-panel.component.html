@@ -1,6 +1,6 @@
 <div class="card panel-message">
     <header class="card-header">
-        <p class="card-header-title">{{ selectedUser.name }}</p>
+        <p class="card-header-title">{{ selectedUser?.name }}</p>
     </header>
     <div class="card-content" appScrollToBottom>
         <div
@@ -8,7 +8,7 @@
             *ngFor="let message of messages"
             [ngClass]="{ 'message-donor': message.isDonor }"
         >
-            <app-message [text]="message.text" [isDonor]="message.isDonor"></app-message>
+            <app-message [text]="message.message" [isDonor]="message.isDonor"></app-message>
         </div>
     </div>
 </div>
